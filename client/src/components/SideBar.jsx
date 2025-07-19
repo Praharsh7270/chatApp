@@ -45,6 +45,7 @@ const SideBar = ({selectedUser, setSelectedUser}) => {
                 </div>
             ))}
         </div>
+        
     </div>
   )
 }

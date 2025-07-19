@@ -13,7 +13,7 @@ const ChatContainer = ({selectedUser, setSelectedUser}) => {
     }
   },[])
   return selectedUser ? (
-    <div className='h-full overflow-scroll relative'>
+    <div className='h-full overflow-scroll relative '>
 
       {/* Header */}
       <div className='flex items-center gap-4 py-4 px-6 border-b border-stone-600 bg-black/30 rounded-t-xl'>
@@ -25,7 +25,7 @@ const ChatContainer = ({selectedUser, setSelectedUser}) => {
         <img 
           src={assets.arrow_icon} 
           alt="Back" 
-          className='md:hidden w-7 h-7 cursor-pointer transition-transform hover:scale-110 hover:bg-stone-800 p-1 rounded-full' 
+          className='md:hidden w-10 h-7 cursor-pointer transition-transform hover:scale-110 hover:bg-stone-800 p-1 rounded-full' 
           onClick={() => setSelectedUser(null)}
         />
         <img src={assets.help_icon} alt="Help" className='max-md:hidden w-7 h-7 transition-transform hover:scale-110 hover:bg-stone-800 p-1 rounded-full' />

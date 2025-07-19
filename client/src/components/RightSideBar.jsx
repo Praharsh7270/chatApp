@@ -22,6 +22,13 @@ const RightSideBar = ({selectedUser}) => {
             ))}
         </div>
       </div>
+      
+      {/* Empty area below Media section - Login button placed here */}
+      <div className='mt-8 flex justify-center'>
+        <button className='bg-gradient-to-r from-purple-600 to-purple-800 text-white px-8 py-3 rounded-full shadow-lg hover:from-purple-700 hover:to-purple-900 transition-colors cursor-pointer font-semibold text-base w-80'>
+          Login
+        </button>
+      </div>
     </div>
   )
 }
