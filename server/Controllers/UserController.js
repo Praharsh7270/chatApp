@@ -3,8 +3,10 @@
 // sigup new user
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from "../Models/User";
-import { generateToken } from '../lib/utils';
+import User from "../Models/User.js";
+import { generateToken } from '../lib/utils.js';
+import cloudinary from '../lib/Cloudnary.js';
+
 
 
 export const signup = async (req, res) => {
@@ -77,4 +79,49 @@ export const login = async (req, res) =>{
 }
 
 
+// Controller to get user profile
 
+export const checkAuth = (req,res) =>{
+    res.json({
+        success: true,
+        user: req.user, // User is attached to the request object by authMiddleware
+        message: "User is authenticated"
+    }); 
+}
+
+
+export const updateProfile = async (req, res) => {
+
+    try{
+        const {fullName,bio, ProFilePic} = req.body;
+
+        const userId = req.user._id; // Get user ID from the authenticated user
+
+        let updateData;
+
+        if(!ProFilePic){
+            updateData = await User.findByIdAndUpdate(userId, {
+                fullName,
+                bio
+            }, {new: true});
+        }
+        else {
+            const upload = await cloudinary.uploader.upload(ProFilePic)
+
+            updateData = await User.findByIdAndUpdate(userId, {
+                ProFilePic: upload.secure_url,
+                fullName,
+                bio
+            }, {new: true});
+        }
+        res.json({
+            success: true,
+            userData: updateData,
+            message: "Profile updated successfully"
+        });
+    }
+    catch(err){
+        console.error("Error in updateProfile:", err);
+        res.status(500).json({message: "Internal server error, Profile not updated successfully"});
+    }
+}
