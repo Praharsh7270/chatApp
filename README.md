@@ -34,7 +34,7 @@ chatApp/
 
 ## 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Praharsh7270/chatApp.git
 cd chatApp
 ```
 
@@ -154,5 +154,3 @@ npm run dev
 
 ---
 
-## 9. License
-MIT 
