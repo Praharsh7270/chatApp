@@ -48,12 +48,13 @@ io.on("connection", (socket) =>{
         userSocketMap[userId] = socket.id;
     }
 
-    // emmit  online users get online users
-    socket.emit("onlineUsers", Object.keys(userSocketMap));
+    // Emit online users to all clients (fix event name)
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
     socket.on("disconnect", () => {
         console.log("User disconnected:", userId);
         delete userSocketMap[userId];
-        io.emit("onlineUsers", Object.keys(userSocketMap));
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
 })
 
