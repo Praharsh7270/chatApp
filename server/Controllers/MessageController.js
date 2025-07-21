@@ -101,11 +101,20 @@ export const sendMsg = async (req,res) =>{
         const senderId = req.user._id;
         const receiverId = req.params.id;
 
-        let imageUrl ;
+        let imageUrl;
 
-        if (image){
-            const upload = await cloudinary.uploader.upload(image);
-            imageUrl = upload.secure_url;
+        if (image) {
+            try {
+                const upload = await cloudinary.uploader.upload(image);
+                imageUrl = upload.secure_url;
+            } catch (cloudErr) {
+                console.error("Cloudinary upload failed:", cloudErr);
+                return res.status(500).json({ success: false, message: "Image upload failed" });
+            }
+        }
+
+        if (!text && !imageUrl) {
+            return res.status(400).json({ success: false, message: "Message must have text or image" });
         }
 
         const NewMsg = await Message.create({
@@ -123,12 +132,11 @@ export const sendMsg = async (req,res) =>{
 
         res.json({
             success: true,
-            message: NewMsg,
+            data: NewMsg,
             message: "Message sent successfully"
         });
-    }
-
-    catch(err){
-
+    } catch (err) {
+        console.error("Error in sendMsg:", err);
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
 }

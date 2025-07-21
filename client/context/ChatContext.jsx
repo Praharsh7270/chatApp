@@ -53,11 +53,19 @@ export const ChatProvider = ({children})=>{
 
     // Function to send message to the selected user
 
-    const sendMessage = async (message) => {
+    const sendMessage = async (payload) => {
         try{
-            const {data} = await axios.post(`/api/messages/send/${selectedUser._id}`, {message});
+            let body;
+            if (typeof payload === 'string') {
+                body = { text: payload };
+            } else if (payload && payload.image) {
+                body = { image: payload.image };
+            } else {
+                body = {};
+            }
+            const {data} = await axios.post(`/api/messages/send/${selectedUser._id}`, body);
             if(data.success){
-                setMessages((prevMessages) => [...prevMessages, data.message]);
+                setMessages((prevMessages) => [...prevMessages, data.data]);
             }
             else{
                 toast.error(data.message);

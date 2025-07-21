@@ -25,8 +25,9 @@ const SideBar = () => {
         getUsers();
     }),[onlineUsers]
 
-    // Debug: log onlineUsers to verify what is received from the backend
-    console.log('Online users:', onlineUsers);
+    useEffect(() => {
+      console.log('Online users:', onlineUsers);
+    }, [onlineUsers]);
 
   return (
     <div className={`bg-[#818582]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-white ${selectedUser ? 'max-md:hidden' : ''}`}>
@@ -54,22 +55,22 @@ const SideBar = () => {
         </div>
 
         <div className='flex flex-col'>
-            {filterUser.map((user, index) =>(
-                <div onClick={() =>{
-                    {setSelectedUser(user)}
-                }} key={index} className={`relative flex items-center gap-3 p-3 rounded-lg hover:bg-[#2f3136] cursor-pointer ${selectedUser?._id === user._id ? 'bg-[#2f3136]' : ''}`} >
-                    {/* Debug: log profilePic */}
-                    {console.log('Profile pic for', user.fullName, ':', user.profilePic)}
+            {filterUser.map((user, index) => {
+                // Determine profile image source
+                let profileImgSrc = assets.avatar_icon;
+                if (user?.ProFilePic) {
+                  profileImgSrc = user.ProFilePic;
+                } else if (user?.profilePic) {
+                  profileImgSrc = user.profilePic.startsWith('http')
+                    ? user.profilePic
+                    : `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/${user.profilePic}`;
+                } else {
+                  console.warn('No profile picture for', user.fullName);
+                }
+                return (
+                  <div onClick={() => setSelectedUser(user)} key={index} className={`relative flex items-center gap-3 p-3 rounded-lg hover:bg-[#2f3136] cursor-pointer ${selectedUser?._id === user._id ? 'bg-[#2f3136]' : ''}`} >
                     <img 
-                      src={
-                        user?.ProFilePic
-                          ? user.ProFilePic
-                          : user?.profilePic
-                            ? user.profilePic.startsWith('http')
-                              ? user.profilePic
-                              : `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/${user.profilePic}`
-                            : assets.avatar_icon
-                      }
+                      src={profileImgSrc}
                       alt=""
                       className='w-[35px] aspect-[1/1] rounded-full '
                     />
@@ -84,7 +85,8 @@ const SideBar = () => {
                     </div>
                     {unseenMessages?.[user._id] && <p className='absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-violet-500/50'>{unseenMessages[user._id]}</p> }
                 </div>
-            ))}
+                );
+            })}
         </div>
         
     </div>
